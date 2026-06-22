@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合作入驻 · 朴朴开放平台</title>
+<style>
+  :root{
+    --bg:#FBF8F2;
+    --surface:#FFFFFF;
+    --border:#EAE2D3;
+    --ink:#262420;
+    --ink-soft:#7A7363;
+    --ink-faint:#A9A28E;
+    --teal:#15604F;
+    --teal-soft:#E6F2EE;
+    --teal-deep:#0E4438;
+    --amber:#E8843C;
+    --amber-soft:#FCEBDD;
+    --cream-2:#F4EEE2;
+    --sans:'PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif;
+    --mono:'SFMono-Regular',Consolas,Menlo,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--sans);background:var(--bg);color:var(--ink);
+    -webkit-font-smoothing:antialiased;font-size:14px;
+  }
+  .page{max-width:760px;margin:0 auto;padding:30px 20px 80px;}
+
+  /* header */
+  .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;}
+  .head .brand{display:flex;align-items:center;gap:10px;}
+  .head .mark{width:32px;height:32px;border-radius:9px;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;}
+  .head .brandname{font-weight:800;font-size:15px;}
+  .head .brandsub{font-size:11px;color:var(--ink-faint);}
+  .fmt-badge{
+    display:none;align-items:center;gap:7px;background:var(--teal-soft);color:var(--teal-deep);
+    padding:6px 13px;border-radius:99px;font-size:12.5px;font-weight:700;
+  }
+  .fmt-badge.show{display:inline-flex;}
+  .fmt-badge .sq{width:7px;height:7px;border-radius:2px;background:var(--teal-deep);}
+
+  /* stepper */
+  .stepper{display:flex;align-items:center;margin-bottom:32px;}
+  .step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
+  .step .circ{
+    width:28px;height:28px;border-radius:50%;background:var(--surface);border:2px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--ink-faint);z-index:2;
+  }
+  .step.done .circ{background:var(--teal);border-color:var(--teal);color:#fff;}
+  .step.active .circ{border-color:var(--teal);color:var(--teal);background:#fff;}
+  .step .slabel{font-size:11px;color:var(--ink-faint);margin-top:7px;text-align:center;white-space:nowrap;}
+  .step.active .slabel{color:var(--teal-deep);font-weight:700;}
+  .step::after{
+    content:'';position:absolute;top:13px;left:50%;width:100%;height:2px;background:var(--border);z-index:1;
+  }
+  .step:last-child::after{display:none;}
+  .step.done::after{background:var(--teal);}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;box-shadow:0 1px 2px rgba(40,30,10,.03);}
+  .card h2{margin:0 0 6px;font-size:19px;}
+  .card .lede{color:var(--ink-soft);font-size:13px;margin:0 0 26px;line-height:1.6;}
+
+  /* step1: format cards */
+  .fmt-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .fmt-card{
+    border:1.5px solid var(--border);border-radius:13px;padding:18px;cursor:pointer;background:var(--cream-2);
+    transition:.12s;
+  }
+  .fmt-card:hover{border-color:var(--teal);}
+  .fmt-card.sel{border-color:var(--teal);background:var(--teal-soft);box-shadow:0 0 0 3px rgba(21,96,79,.08);}
+  .fmt-card .ftop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .fmt-card .ficon{width:34px;height:34px;border-radius:9px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .fmt-card .fcheck{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;}
+  .fmt-card.sel .fcheck{background:var(--teal);border-color:var(--teal);color:#fff;font-size:10px;font-weight:900;}
+  .fmt-card h4{margin:0 0 4px;font-size:14.5px;}
+  .fmt-card p{margin:0;font-size:11.5px;color:var(--ink-soft);line-height:1.55;}
+
+  /* form fields */
+  .form-step-label{font-size:11px;font-weight:800;letter-spacing:.4px;color:var(--ink-faint);text-transform:uppercase;margin:22px 0 10px;}
+  .form-step-label:first-child{margin-top:0;}
+  .frow{display:flex;gap:14px;margin-bottom:14px;}
+  .ffield{flex:1;}
+  .ffield label{display:block;font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:6px;}
+  .ffield label .opt{font-weight:400;color:var(--ink-faint);}
+  .ffield input,.ffield select{
+    width:100%;border:1px solid var(--border);border-radius:9px;padding:11px 13px;font-size:13.5px;
+    font-family:var(--sans);background:#fff;color:var(--ink);
+  }
+  .ffield input:focus,.ffield select:focus{outline:none;border-color:var(--teal);}
+  .hint{font-size:11.5px;color:var(--ink-faint);margin-top:5px;}
+  .cond{display:none;}
+  .cond.show{display:flex;}
+  .cond-block{display:none;}
+  .cond-block.show{display:block;}
+
+  /* upload list */
+  .upl{border:1px dashed var(--border);border-radius:11px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;background:var(--cream-2);}
+  .upl .un{font-size:13px;font-weight:600;}
+  .upl .ud{font-size:11px;color:var(--ink-faint);margin-top:2px;}
+  .upl button{border:1px solid var(--teal);background:#fff;color:var(--teal);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;}
+  .upl.required .un::after{content:' *';color:var(--amber);}
+
+  /* settlement panel */
+  .settle-box{background:var(--teal-soft);border-radius:13px;padding:18px 20px;margin-bottom:18px;}
+  .settle-box h4{margin:0 0 10px;font-size:13.5px;color:var(--teal-deep);}
+  .settle-row{display:flex;justify-content:space-between;font-size:12.5px;padding:7px 0;border-bottom:1px solid rgba(21,96,79,.12);}
+  .settle-row:last-child{border-bottom:none;}
+  .settle-row b{color:var(--teal-deep);}
+  .agree{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--ink-soft);margin-top:14px;}
+  .agree input{margin-top:2px;}
+  .agree a{color:var(--teal);font-weight:700;}
+
+  /* success */
+  .success{text-align:center;padding:30px 10px;}
+  .success .ic{width:62px;height:62px;border-radius:50%;background:var(--teal-soft);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 18px;}
+  .success h2{margin:0 0 8px;}
+  .success p{color:var(--ink-soft);font-size:13px;max-width:380px;margin:0 auto;line-height:1.6;}
+  .success .sumcard{background:var(--cream-2);border-radius:12px;padding:16px 20px;margin:22px auto 0;max-width:380px;text-align:left;}
+  .success .sumcard .r{display:flex;justify-content:space-between;font-size:12.5px;padding:6px 0;}
+  .success .sumcard .r b{color:var(--ink);}
+
+  /* nav buttons */
+  .nav-btns{display:flex;justify-content:space-between;margin-top:30px;}
+  .btn{border:none;border-radius:10px;padding:12px 24px;font-size:13.5px;font-weight:700;cursor:pointer;}
+  .btn-primary{background:var(--teal);color:#fff;}
+  .btn-primary:disabled{background:#CFD3CD;cursor:not-allowed;}
+  .btn-ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--border);}
+  .skip-note{font-size:11.5px;color:var(--ink-faint);text-align:center;margin-top:14px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="head">
+    <div class="brand">
+      <div class="mark">朴</div>
+      <div><div class="brandname">朴朴开放平台 · 合作入驻</div><div class="brandsub">PUPU PARTNER ONBOARDING</div></div>
+    </div>
+    <div class="fmt-badge" id="fmtBadge"><span class="sq"></span><span id="fmtBadgeText"></span></div>
+  </div>
+
+  <div class="stepper" id="stepper">
+    <div class="step active" data-step="1"><div class="circ">1</div><div class="slabel">选择业态</div></div>
+    <div class="step" data-step="2"><div class="circ">2</div><div class="slabel">主体信息</div></div>
+    <div class="step" data-step="3"><div class="circ">3</div><div class="slabel">资质材料</div></div>
+    <div class="step" data-step="4"><div class="circ">4</div><div class="slabel">商品/档口</div></div>
+    <div class="step" data-step="5"><div class="circ">5</div><div class="slabel">协议结算</div></div>
+    <div class="step" data-step="6"><div class="circ">6</div><div class="slabel">完成</div></div>
+  </div>
+
+  <div class="card">
+
+    <!-- STEP 1 -->
+    <div class="panel" id="p1">
+      <h2>选择合作业态</h2>
+      <p class="lede">不同业态对应不同的入驻流程、所需材料与结算规则，选择后系统会为你定制后续步骤。</p>
+      <div class="fmt-grid">
+        <div class="fmt-card" data-fmt="b2c" data-label="B2C 自营零售">
+          <div class="ftop"><div class="ficon">🛒</div><div class="fcheck"></div></div>
+          <h4>B2C 自营零售</h4>
+          <p>由朴朴自营门店统一采购、销售、履约，适合品牌直供商品入仓合作。</p>
+        </div>
+        <div class="fmt-card" data-fmt="supply" data-label="B2B 供货">
+          <div class="ftop"><div class="ficon">📦</div><div class="fcheck"></div></div>
+          <h4>B2B 供货</h4>
+          <p>作为供应商向朴朴及联营商家批量供货，按结算价定期对账。</p>
+        </div>
+        <div class="fmt-card" data-fmt="o2o" data-label="B2B + O2O 融合">
+          <div class="ftop"><div class="ficon">🍜</div><div class="fcheck"></div></div>
+          <h4>B2B + O2O 融合</h4>
+          <p>商家既供货也自主经营线上店铺，适合餐饮购销 + 平台自运营场景。</p>
+        </div>
+        <div class="fmt-card" data-fmt="joint" data-label="线下联营档口">
+          <div class="ftop"><div class="ficon">🏬</div><div class="fcheck"></div></div>
+          <h4>线下联营档口</h4>
+          <p>在朴朴线下门店内设立联营档口，独立经营、独立核算、平台分账。</p>
+        </div>
+        <div class="fmt-card" data-fmt="platform" data-label="纯平台服务商赋能" style="grid-column:1 / -1;">
+          <div class="ftop"><div class="ficon">⚙️</div><div class="fcheck"></div></div>
+          <h4>纯平台服务商赋能</h4>
+          <p>不涉及商品交易，仅采购朴朴的 KDS / WMS / 采购系统等技术能力。</p>
+        </div>
+      </div>
+      <div class="nav-btns">
+        <span></span>
+        <button class="btn btn-primary" id="toStep2" disabled onclick="goStep(2)">下一步</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="panel" id="p2" style="display:none;">
+      <h2>主体信息</h2>
+      <p class="lede">请填写主体基本信息，<span id="fmtNote">系统会按你选择的业态展示对应字段</span>。</p>
+
+      <div class="form-step-label">通用信息</div>
+      <div class="frow">
+        <div class="ffield"><label>企业 / 个体工商户名称</label><input placeholder="请输入营业执照上的全称"></div>
+      </div>
+      <div class="frow">
+        <div class="ffield"><label>联系人姓名</label><input placeholder="请输入联系人姓名"></div>
+        <div class="ffield"><label>联系人手机号</label><input placeholder="请输入手机号"></div>
+      </div>
+
+      <div class="form-step-label cond-block show" data-show="supply,o2o">业态专属信息</div>
+      <div class="frow cond-block show" data-show="supply,o2o">
+        <div class="ffield"><label>主营供货类目</label>
+          <select><option>生鲜果蔬</option><option>米面粮油</option><option>休闲食品</option><option>日用百货</option></select>
+        </div>
+        <div class="ffield"><label>预计月供货规模 <span class="opt">（选填）</span></label><input placeholder="例如：50 万元 / 月"></div>
+      </div>
+
+      <div class="form-step-label cond-block show" data-show="joint">业态专属信息</div>
+      <div class="frow cond-block show" data-show="joint">
+        <div class="ffield"><label>意向门店</label>
+          <select><option>福州·鼓楼万象城店</option><option>厦门·SM 城市广场店</option><option>泉州·万达店</option></select>
+        </div>
+        <div class="ffield"><label>档口经营品类</label><input placeholder="例如：现制奶茶"></div>
+      </div>
+
+      <div class="form-step-label cond-block show" data-show="platform">业态专属信息</div>
+      <div class="frow cond-block show" data-show="platform">
+        <div class="ffield"><label>意向采购系统</label>
+          <select><option>KDS 厨房显示系统</option><option>WMS 仓储管理系统</option><option>采购系统</option><option>多项组合</option></select>
+        </div>
+        <div class="ffield"><label>现有门店数量</label><input placeholder="请输入门店数量"></div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-ghost" onclick="goStep(1)">上一步</button>
+        <button class="btn btn-primary" onclick="goStep(3)">下一步</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="panel" id="p3" style="display:none;">
+      <h2>资质材料</h2>
+      <p class="lede">请上传以下材料，所需材料随业态不同而变化。</p>
+
+      <div class="upl required"><div><div class="un">营业执照</div><div class="ud">jpg/png/pdf，5MB 以内</div></div><button>上传</button></div>
+
+      <div class="cond-block show" data-show="supply,o2o,joint">
+        <div class="upl required"><div><div class="un">食品经营许可证</div><div class="ud">涉及食品类目必传</div></div><button>上传</button></div>
+      </div>
+      <div class="cond-block show" data-show="supply,o2o">
+        <div class="upl"><div><div class="un">供应商授权书 <span style="font-weight:400;color:var(--ink-faint);">（选填，代理品牌需上传）</span></div><div class="ud">代理 / 经销关系证明</div></div><button>上传</button></div>
+      </div>
+      <div class="cond-block show" data-show="joint">
+        <div class="upl required"><div><div class="un">档口经营场地证明</div><div class="ud">门店出具的场地使用确认函</div></div><button>上传</button></div>
+      </div>
+      <div class="cond-block show" data-show="platform">
+        <div class="upl"><div><div class="un">系统对接技术联系人信息表 <span style="font-weight:400;color:var(--ink-faint);">（选填）</span></div><div class="ud">便于技术团队对接</div></div><button>上传</button></div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-ghost" onclick="goStep(2)">上一步</button>
+        <button class="btn btn-primary" onclick="goStep(4)">下一步</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="panel" id="p4" style="display:none;">
+      <h2>商品 / 档口信息</h2>
+      <p class="lede" id="p4lede">请补充具体经营信息，便于平台完成商品/档口建档。</p>
+
+      <div class="cond-block show" data-show="b2c,supply,o2o">
+        <div class="frow">
+          <div class="ffield"><label>首批上架商品类目</label><input placeholder="例如：休闲零食 / 乳制品"></div>
+          <div class="ffield"><label>首批 SKU 数量预估</label><input placeholder="请输入数量"></div>
+        </div>
+      </div>
+      <div class="cond-block show" data-show="joint">
+        <div class="frow">
+          <div class="ffield"><label>档口面积</label><input placeholder="例如：15㎡"></div>
+          <div class="ffield"><label>预计开业时间</label><input placeholder="例如：2026-08-01"></div>
+        </div>
+      </div>
+      <div class="cond-block show" data-show="platform">
+        <div style="background:var(--cream-2);border-radius:11px;padding:16px 18px;font-size:12.5px;color:var(--ink-soft);line-height:1.6;">
+          纯平台服务商赋能业态不涉及商品交易，此步骤已自动跳过商品建档，将直接进入协议与服务费确认。
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-ghost" onclick="goStep(3)">上一步</button>
+        <button class="btn btn-primary" onclick="goStep(5)">下一步</button>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="panel" id="p5" style="display:none;">
+      <h2>协议与结算规则确认</h2>
+      <p class="lede">以下结算结构根据你选择的业态自动生成，请仔细核对后签署。</p>
+
+      <div class="settle-box cond-block show" data-show="b2c">
+        <h4>B2C 自营零售 · 结算规则</h4>
+        <div class="settle-row"><span>合作方式</span><b>商品入仓采购，朴朴买断结算</b></div>
+        <div class="settle-row"><span>结算周期</span><b>月结，次月 15 日前</b></div>
+      </div>
+      <div class="settle-box cond-block show" data-show="supply,o2o">
+        <h4 id="settleTitle2">B2B 供货 · 结算规则</h4>
+        <div class="settle-row"><span>合作方式</span><b>按供货结算价批量供货</b></div>
+        <div class="settle-row"><span>结算周期</span><b>双周结</b></div>
+        <div class="settle-row"><span>平台服务费</span><b>交易额的 2.5%</b></div>
+      </div>
+      <div class="settle-box cond-block show" data-show="joint">
+        <h4>线下联营档口 · 结算规则</h4>
+        <div class="settle-row"><span>合作方式</span><b>独立经营，平台抽佣分账</b></div>
+        <div class="settle-row"><span>佣金比例</span><b>营业额的 18%</b></div>
+        <div class="settle-row"><span>结算周期</span><b>周结</b></div>
+      </div>
+      <div class="settle-box cond-block show" data-show="platform">
+        <h4>纯平台服务商赋能 · 服务费规则</h4>
+        <div class="settle-row"><span>合作方式</span><b>系统能力订阅，不涉及交易分账</b></div>
+        <div class="settle-row"><span>计费方式</span><b>按门店数量年付订阅费</b></div>
+      </div>
+
+      <label class="agree"><input type="checkbox" checked> 我已阅读并同意 <a>《朴朴开放平台合作协议》</a>及对应业态的结算补充条款</label>
+
+      <div class="nav-btns">
+        <button class="btn btn-ghost" onclick="goStep(4)">上一步</button>
+        <button class="btn btn-primary" onclick="goStep(6)">提交入驻申请</button>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="panel" id="p6" style="display:none;">
+      <div class="success">
+        <div class="ic">✓</div>
+        <h2>提交成功，已进入审核</h2>
+        <p>我们将在 1–3 个工作日内完成资质审核，审核结果会通过短信和站内信通知联系人。</p>
+        <div class="sumcard">
+          <div class="r"><span>合作业态</span><b id="sumFmt">—</b></div>
+          <div class="r"><span>申请编号</span><b style="font-family:var(--mono)">PP20260621-7731</b></div>
+          <div class="r"><span>当前状态</span><b style="color:var(--teal)">资质审核中</b></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  var selectedFmt = null;
+  document.querySelectorAll('.fmt-card').forEach(function(card){
+    card.addEventListener('click', function(){
+      document.querySelectorAll('.fmt-card').forEach(c=>c.classList.remove('sel'));
+      card.classList.add('sel');
+      selectedFmt = card.dataset.fmt;
+      document.getElementById('toStep2').disabled = false;
+      var badge = document.getElementById('fmtBadge');
+      badge.classList.add('show');
+      document.getElementById('fmtBadgeText').textContent = card.dataset.label;
+      document.getElementById('sumFmt').textContent = card.dataset.label;
+      applyConditionals();
+    });
+  });
+
+  function applyConditionals(){
+    document.querySelectorAll('.cond-block').forEach(function(el){
+      var list = (el.dataset.show||'').split(',');
+      if(list.indexOf(selectedFmt) > -1){ el.classList.add('show'); } else { el.classList.remove('show'); }
+    });
+  }
+
+  function goStep(n){
+    for(var i=1;i<=6;i++){
+      document.getElementById('p'+i).style.display = (i===n)?'block':'none';
+    }
+    document.querySelectorAll('.step').forEach(function(s){
+      var sn = parseInt(s.dataset.step);
+      s.classList.remove('active','done');
+      if(sn < n) s.classList.add('done');
+      if(sn === n) s.classList.add('active');
+    });
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+</script>
+</body>
+</html>
